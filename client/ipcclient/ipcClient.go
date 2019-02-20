@@ -6,9 +6,9 @@ import (
 	"net"
 	"time"
 
-	"github.com/iotaledger/giota"
-	"github.com/muxxer/diverdriver/common"
-	"github.com/muxxer/diverdriver/common/ipccommon"
+	"github.com/tylerw1369/iotago"
+	"github.com/tylerw1369/diverdriver/common"
+	"github.com/tylerw1369/diverdriver/common/ipccommon"
 	"github.com/sigurn/crc8"
 )
 
