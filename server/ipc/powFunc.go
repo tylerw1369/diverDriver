@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/iotaledger/giota"
-	"github.com/muxxer/diverdriver/common"
-	"github.com/muxxer/diverdriver/common/ipccommon"
-	"github.com/muxxer/diverdriver/logs"
+	"github.com/tylerw1369/iotago"
+	"github.com/tylerw1369/diverdriver/common"
+	"github.com/tylerw1369/diverdriver/common/ipccommon"
+	"github.com/tylerw1369/diverdriver/logs"
 	"github.com/sigurn/crc8"
 	"github.com/spf13/viper"
 )
@@ -199,7 +199,7 @@ func HandleClientConnection(c net.Conn, config *viper.Viper, powType string, pow
 							break
 						}
 
-						trytes, err := giota.ToTrytes(string(frame.Data[1:]))
+						trytes, err := iotago.ToTrytes(string(frame.Data[1:]))
 						if err != nil {
 							logs.Log.Debug(err.Error())
 							responseMsg, _ := ipccommon.NewIpcMessageV1(frame.ReqID, ipccommon.IpcCmdError, []byte(err.Error()))
