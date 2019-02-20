@@ -4,7 +4,7 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/iotaledger/giota"
+	"github.com/tylerw1369/iotago"
 )
 
 const (
