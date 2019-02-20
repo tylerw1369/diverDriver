@@ -199,7 +199,7 @@ func HandleClientConnection(c net.Conn, config *viper.Viper, powType string, pow
 							break
 						}
 
-						trytes, err := iotago.ToTrytes(string(frame.Data[1:]))
+						trytes, err := giota.ToTrytes(string(frame.Data[1:]))
 						if err != nil {
 							logs.Log.Debug(err.Error())
 							responseMsg, _ := ipccommon.NewIpcMessageV1(frame.ReqID, ipccommon.IpcCmdError, []byte(err.Error()))
