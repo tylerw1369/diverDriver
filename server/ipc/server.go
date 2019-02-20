@@ -5,8 +5,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/iotaledger/giota"
-	"github.com/muxxer/diverdriver/logs"
+	"github.com/tylerw1369/iotago"
+	"github.com/tylerw1369/diverdriver/logs"
 )
 
 var (
