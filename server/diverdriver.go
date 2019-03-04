@@ -9,17 +9,11 @@ import (
 	"syscall"
 
 	"github.com/iotaledger/giota"
-	"github.com/shufps/pidiver/pidiver"
-	"github.com/shufps/pidiver/raspberry"
 	flag "github.com/spf13/pflag"
 	"github.com/spf13/viper"
 
-	#ifdef FTDIVER
-	"github.com/muxxer/ftdiver"
-	#endif
-
-	"github.com/muxxer/diverdriver/logs"
-	"github.com/muxxer/diverdriver/server/ipc"
+	"github.com/tylerw1369/diverdriver/logs"
+	"github.com/tylerw1369/diverdriver/server/ipc"
 )
 
 var config *viper.Viper
@@ -37,12 +31,7 @@ func loadConfig() *viper.Viper {
 	// Setup Viper
 	var config = viper.New()
 
-	// Get command line arguments
-	// The flag package provides a default help printer via -h switch
-	flag.StringP("fpga.core", "f", "pidiver1.1.rbf", "Core/config file to upload to FPGA")
-	flag.StringP("usb.device", "d", "/dev/ttyACM0", "Device file for usb communication")
-
-	flag.StringP("pow.type", "t", "giota", "'pidiver', 'usbdiver', 'ftdiver', 'giota', 'giota-cl', 'giota-sse', 'giota-carm64', 'giota-c128', 'giota-c' or giota-go'")
+	flag.StringP("pow.type", "t", "gofpga", "'giota-fpga', 'giota', 'giota-cl', 'giota-sse', 'giota-carm64', 'giota-c128', 'giota-c' or giota-go'")
 	flag.IntP("pow.maxMinWeightMagnitude", "m", 14, "Maximum Min-Weight-Magnitude (Difficulty for PoW)")
 
 	var logLevel = flag.StringP("log.level", "l", "INFO", "'DEBUG', 'INFO', 'NOTICE', 'WARNING', 'ERROR' or 'CRITICAL'")
@@ -58,7 +47,7 @@ func loadConfig() *viper.Viper {
 
 	// Bind environment vars
 	replacer := strings.NewReplacer(".", "_")
-	config.SetEnvPrefix("DIVERDRIVER")
+	config.SetEnvPrefix("FPGADIVER")
 	config.SetEnvKeyReplacer(replacer)
 	config.AutomaticEnv()
 
@@ -154,69 +143,14 @@ func main() {
 			logs.Log.Infof("POW type '%s' not available. Using '%s' instead", "PowC", powType)
 		}
 
-	case "pidiver":
-		// initialize PiDiverConfig
-		piConfig := pidiver.PiDiverConfig{
-			Device:         "",
-			ConfigFile:     config.GetString("fpga.core"),
-			ForceFlash:     false,
-			ForceConfigure: false}
-
-		// initialize pidiver
-		piDiver := pidiver.PiDiver{LLStruct: raspberry.GetLowLevel(), Config: &piConfig}
-		err = piDiver.InitPiDiver()
-		if err != nil {
-			logs.Log.Fatal(err)
+	case "giota-fpga":
+		powFunc, err = giota.GetPowFunc("PowFPGA")
+		if err == nil {
+			powType = "gIOTA-FPGA"
+		} else {
+			powType, powFunc = giota.GetBestPoW()
+			logs.Log.Infof("POW type '%s' not available. Using '%s' instead", "PowFPGA", powType)
 		}
-
-		powVersion = piDiver.GetCoreVersion()
-		powFunc = piDiver.PowPiDiver
-		powType = "PiDiver"
-
-	case "usbdiver":
-		// initialize PiDiverConfig
-		piConfig := pidiver.PiDiverConfig{
-			Device:         config.GetString("usb.device"),
-			ConfigFile:     config.GetString("fpga.core"),
-			ForceFlash:     false,
-			ForceConfigure: false}
-
-		// initialize usbdiver
-		usbDiver := pidiver.USBDiver{Config: &piConfig}
-		err = usbDiver.InitUSBDiver()
-		if err != nil {
-			logs.Log.Fatal(err)
-		}
-
-		powVersion = usbDiver.GetVersion()
-		powFunc = usbDiver.PowUSBDiver
-		powType = "USBDiver"
-
-	#ifdef FTDIVER
-	case "ftdiver":
-		// initialize PiDiverConfig
-		piConfig := pidiver.PiDiverConfig{
-			Device:         "",
-			ConfigFile:     "",
-			ForceFlash:     false,
-			ForceConfigure: false}
-
-		// initialize ftdiver
-		ftDiver := pidiver.PiDiver{LLStruct: ftdiver.GetLowLevel(), Config: &piConfig}
-		err = ftDiver.InitPiDiver()
-		if err != nil {
-			logs.Log.Fatal(err)
-		}
-
-		powVersion = ftDiver.GetCoreVersion()
-		powFunc = ftDiver.PowPiDiver
-		powType = "ftdiver"
-	#endif
-
-	
-	default:
-		logs.Log.Fatal("Unknown POW type")
-	}
 
 	ipcserver.SetPowFunc(powFunc)
 
