@@ -1,7 +1,4 @@
 {
-  "fpga": {
-    "core": "pidiver1.1.rbf"
-  },
   "log": {
     "level": "DEBUG"
   },
@@ -11,8 +8,5 @@
   },
   "server": {
     "diverDriverPath": "/tmp/diverDriver.sock"
-  },
-  "usb": {
-    "device": "/dev/ttyACM0"
   }
 }
