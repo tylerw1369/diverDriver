@@ -8,7 +8,7 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/iotaledger/giota"
+	"github.com/tylerw1369/fpgago"
 	flag "github.com/spf13/pflag"
 	"github.com/spf13/viper"
 
