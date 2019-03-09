@@ -8,7 +8,7 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/tylerw1369/fpgago"
+	"github.com/tylerw1369/iotago"
 	flag "github.com/spf13/pflag"
 	"github.com/spf13/viper"
 
@@ -31,7 +31,7 @@ func loadConfig() *viper.Viper {
 	// Setup Viper
 	var config = viper.New()
 
-	flag.StringP("pow.type", "t", "gofpga", "'giota-fpga', 'giota', 'giota-cl', 'giota-sse', 'giota-carm64', 'giota-c128', 'giota-c' or giota-go'")
+	flag.StringP("pow.type", "t", "fpgago", "'giota-fpga', 'giota', 'giota-cl', 'giota-sse', 'giota-carm64', 'giota-c128', 'giota-c' or giota-go'")
 	flag.IntP("pow.maxMinWeightMagnitude", "m", 14, "Maximum Min-Weight-Magnitude (Difficulty for PoW)")
 
 	var logLevel = flag.StringP("log.level", "l", "INFO", "'DEBUG', 'INFO', 'NOTICE', 'WARNING', 'ERROR' or 'CRITICAL'")
