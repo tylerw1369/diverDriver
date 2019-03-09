@@ -3,7 +3,7 @@ package common
 import (
 	"sync"
 
-	"github.com/tylerw1369/fpgago"
+	"github.com/tylerw1369/iotago"
 )
 
 const (
