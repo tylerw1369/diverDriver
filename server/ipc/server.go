@@ -5,7 +5,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/tylerw1369/fpgago"
+	"github.com/tylerw1369/iotago"
 	"github.com/tylerw1369/diverdriver/logs"
 )
 
